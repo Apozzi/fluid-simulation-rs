@@ -18,8 +18,6 @@ pub mod field;
 // 800x600
 
 use mouse::Mouse;
-//use field::VectorField2D;
-
 
 pub trait ApplicationContext {
     fn draw_frame(&mut self, _display: &Display<WindowSurface>) { }
@@ -50,6 +48,7 @@ impl<T: ApplicationContext + 'static> ApplicationHandler<()> for App<T> {
             event_loop.exit();
         }
     }
+    
     fn suspended(&mut self, _event_loop: &ActiveEventLoop) {
         self.state = None;
     }
@@ -83,22 +82,15 @@ impl<T: ApplicationContext + 'static> ApplicationHandler<()> for App<T> {
                 event_loop.exit()
             },
             glium::winit::event::WindowEvent::CursorMoved { position, .. } => {
-                let position_x: i16 = position.x as i16;
-                let position_y: i16 = position.y as i16;
+                let current_x = position.x as i16;
+                let current_y = position.y as i16;
+                
+                // Atualiza a posição do mouse usando o Mutex
+                Mouse::update_position(current_x, current_y);
 
-                Mouse::update_position(position_x, position_y);
-        
-                let (delta_x, delta_y) = Mouse::get_delta();
-                let (x, y) = Mouse::get_position();
-
-                //VectorField2D::onMouseClick(x, y, delta_x, delta_y);
-        
-                println!("Delta mouse position: {}x{}", delta_x, delta_y);
-                println!("Mouse position: {}x{}", x, y);
-            },
-            glium::winit::event::WindowEvent::MouseInput { state, button, .. } => {
-                if state == glium::winit::event::ElementState::Pressed {
-                    println!("Mouse clicked: {:?}", button);
+                // Passa o evento para a aplicação
+                if let Some(state) = &mut self.state {
+                    state.context.handle_window_event(&event, &state.window);
                 }
             },
             ev => {
