@@ -3,4 +3,6 @@ Implementação de Simulação de Fluido em Rust utilizando a biblioteca glium p
 
 ![a2 (1) (1)](https://github.com/user-attachments/assets/cf86de9a-f10f-4ce2-adfa-bf4b84829c6f)
 
+### Como utilizar?
 
+Basta clicar e arrastar o mouse que assim irá alterar o campo vetorial na direção que for movimentada.
