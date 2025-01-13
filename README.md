@@ -10,5 +10,7 @@ Basta clicar e arrastar o mouse que assim irá alterar o campo vetorial na dire�
 ### Como compilar?
 
 Basta ter Rust instalado e rodar:
+
 ```cargo run```
+
 Irá instalar as dependencias e rodar o programa e gerar um executavel dentro da pasta `target`.
