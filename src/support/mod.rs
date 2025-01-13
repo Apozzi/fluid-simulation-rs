@@ -11,13 +11,12 @@ use winit::event::WindowEvent;
 use winit::window::WindowId;
 use winit::application::ApplicationHandler;
 
-pub mod camera;
 pub mod mouse;
-pub mod field;
+use mouse::Mouse;
 
 // 800x600
-
-use mouse::Mouse;
+pub static WINDOW_HEIGHT: u32 = 600;
+pub static WINDOW_WIDTH: u32 = 800;
 
 pub trait ApplicationContext {
     fn draw_frame(&mut self, _display: &Display<WindowSurface>) { }
@@ -84,11 +83,8 @@ impl<T: ApplicationContext + 'static> ApplicationHandler<()> for App<T> {
             glium::winit::event::WindowEvent::CursorMoved { position, .. } => {
                 let current_x = position.x as i16;
                 let current_y = position.y as i16;
-                
-                // Atualiza a posição do mouse usando o Mutex
                 Mouse::update_position(current_x, current_y);
 
-                // Passa o evento para a aplicação
                 if let Some(state) = &mut self.state {
                     state.context.handle_window_event(&event, &state.window);
                 }
@@ -139,14 +135,12 @@ impl<T: ApplicationContext + 'static> State<T> {
             })
         });
 
-        // Determine our framebuffer size based on the window size, or default to 800x600 if it's invisible
-        let (width, height): (u32, u32) = if visible { window.inner_size().into() } else { (800, 600) };
+        let (width, height): (u32, u32) = if visible { window.inner_size().into() } else { (WINDOW_WIDTH, WINDOW_HEIGHT) };
         let attrs = glutin::surface::SurfaceAttributesBuilder::<WindowSurface>::new().build(
             window_handle.into(),
             NonZeroU32::new(width).unwrap(),
             NonZeroU32::new(height).unwrap(),
         );
-        // Now we can create our surface, use it to make our context current and finally create our display
         let surface = unsafe { gl_config.display().create_window_surface(&gl_config, &attrs).unwrap() };
         let current_context = not_current_gl_context.unwrap().make_current(&surface).unwrap();
         let display = glium::Display::from_context_surface(current_context, surface).unwrap();
