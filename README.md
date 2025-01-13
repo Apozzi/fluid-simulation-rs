@@ -6,3 +6,9 @@ Implementação de Simulação de Fluido em Rust utilizando a biblioteca glium p
 ### Como utilizar?
 
 Basta clicar e arrastar o mouse que assim irá alterar o campo vetorial na direção que for movimentada.
+
+### Como compilar?
+
+Basta ter Rust instalado e rodar:
+```cargo run```
+Irá instalar as dependencias e rodar o programa e gerar um executavel dentro da pasta `target`.
